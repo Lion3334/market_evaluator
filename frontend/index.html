@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CardMark - Trading Card Market Data</title>
+    <meta name="description"
+        content="Comprehensive market analysis tracking year-to-date sales volume across major categories.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Navigation Header -->
+        <header class="nav-header">
+            <div class="nav-left">
+                <div class="logo">
+                    <span class="logo-icon">📊</span>
+                    <span class="logo-text">CardMark</span>
+                </div>
+                <nav class="nav-tabs">
+                    <a href="#" class="nav-tab">Grading Trends</a>
+                    <a href="#" class="nav-tab active">Sales Trends</a>
+                    <a href="#" class="nav-tab">Universal Search</a>
+                    <a href="#" class="nav-tab">Player Pop Data</a>
+                </nav>
+            </div>
+            <div class="nav-right">
+                <button class="icon-btn" title="Dark Mode">🌙</button>
+                <button class="icon-btn" title="Share">↗️</button>
+                <button class="icon-btn" title="Help">❓</button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Page Header Card -->
+            <div class="page-header-card">
+                <div class="header-icon">💎</div>
+                <div class="header-content">
+                    <h1>2024 Topps Cosmic Chrome Caleb Williams #100</h1>
+                    <div class="update-badge">📅 Data Updated: January 6, 2026</div>
+                    <p class="header-description">
+                        Deep-dive market analysis for <b>Caleb Williams - The Sun Parallel</b>.
+                        Tracking real-time pricing across all major conditions, grading population growth, and liquidity
+                        metrics.
+                    </p>
+                    <div class="header-tags">
+                        <span class="tag">Planetary Pursuit</span>
+                        <span class="tag">Rookie Card</span>
+                        <span class="tag">Pop Report</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filter Bar -->
+            <div class="filter-bar">
+                <div class="filter-left">
+                    <span class="filter-label">Condition:</span>
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" title="All Conditions">📋</button>
+                        <button class="filter-btn" title="Gem Mint (10)">💎</button>
+                        <button class="filter-btn" title="Mint (9)">✨</button>
+                        <button class="filter-btn" title="Raw">📦</button>
+                    </div>
+                    <div class="color-scale-toggle">
+                        <input type="checkbox" id="colorScale" checked>
+                        <label for="colorScale">Heat Map</label>
+                    </div>
+                </div>
+                <div class="filter-right">
+                    <button class="export-btn">
+                        <span>⬇️</span> Export Analysis
+                    </button>
+                </div>
+            </div>
+
+            <!-- Data Table -->
+            <div class="table-container">
+                <table class="data-table" id="dataTable">
+                    <thead>
+                        <tr>
+                            <th class="col-condition">CONDITION / GRADE</th>
+                            <th class="col-pop text-center">PSA POP</th>
+                            <th class="col-success text-center">SUCCESS %</th>
+                            <th class="col-bin text-center">AVG BIN PRICE</th>
+                            <th class="col-auction text-center">AVG AUCTION PRICE</th>
+                            <th class="col-vol text-center">ACTIVE VOL</th>
+                            <th class="col-trend">SALES TREND (30D)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <!-- Data rows will be inserted by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination-bar">
+                <div class="pagination-info">
+                    Showing <span id="showStart">1</span> to <span id="showEnd">7</span> of <span
+                        id="totalResults">97</span> results
+                </div>
+                <div class="pagination-controls">
+                    <button class="page-btn" id="prevPage">‹</button>
+                    <button class="page-btn active">1</button>
+                    <button class="page-btn">2</button>
+                    <button class="page-btn">3</button>
+                    <button class="page-btn">...</button>
+                    <button class="page-btn" id="nextPage">›</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
