@@ -7,8 +7,9 @@ import httpx
 from datetime import datetime
 
 # Production credentials
-EBAY_APP_ID = "PeterHsu-Cardmark-PRD-50ea75066-5afd39c7"
-EBAY_CERT_ID = "PRD-0ea750660fdd-4767-48d5-8e49-97bd"
+# Production credentials
+EBAY_APP_ID = os.getenv("EBAY_APP_ID")
+EBAY_CERT_ID = os.getenv("EBAY_CERT_ID")
 
 # eBay Production URLs
 PROD_AUTH_URL = "https://api.ebay.com/identity/v1/oauth2/token"

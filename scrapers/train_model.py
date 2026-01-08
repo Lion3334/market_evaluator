@@ -15,7 +15,12 @@ MODEL_PATH_DIRECTION = "backend/model_direction.pkl"
 
 def load_data():
     """Load transaction data from PostgreSQL V2 Schema."""
-    conn = psycopg2.connect(database=DB_NAME)
+    db_url = os.getenv("DATABASE_URL")
+    if db_url:
+        conn = psycopg2.connect(db_url)
+    else:
+        conn = psycopg2.connect(database=DB_NAME)
+        
     # Join sales and cards. We want granular sales data.
     query = """
         SELECT 
@@ -223,7 +228,7 @@ def prepare_ml_data(df):
     feature_cols = [
         'last_sold_price',     
         'rolling_avg_3',
-        'days_since_last_sale',  # <--- New Feature (Staleness)
+        'days_since_last_sale',  
         'player_7d_vol',       
         'player_7d_avg_price', 
         'grade_num', 
@@ -234,18 +239,21 @@ def prepare_ml_data(df):
         'days_since_start'
     ]
     
+    # Ensure strict time sorting before returning features
+    df = df.sort_values('sale_date')
+    
     X = df[feature_cols].fillna(0)
     y_price = df['price']
     
     # Directional Target: 1 if Next Price > Last Sold Price, else 0
     y_direction = (df['price'] > df['last_sold_price']).astype(int)
     
-    return X, y_price, y_direction
+    return X, y_price, y_direction, df['sale_date']
 
 def train_and_evaluate():
-    """Train Regressor and Classifier models."""
+    """Train Regressor and Classifier models using Time Series Validation."""
     print("=" * 60)
-    print("CARD PRICE & DIRECTION MODEL TRAINING")
+    print("CARD PRICE & DIRECTION MODEL TRAINING (TIME SERIES)")
     print("=" * 60)
     
     print("\n[1/4] Loading data...")
@@ -256,14 +264,24 @@ def train_and_evaluate():
 
     print("\n[2/4] Engineering features...")
     df, le_player, le_parallel = engineer_features(df)
-    X, y_price, y_direction = prepare_ml_data(df)
+    
+    # Sort strictly by date before splitting
+    df = df.sort_values('sale_date')
+    X, y_price, y_direction, dates = prepare_ml_data(df)
     print(f"  Features: {list(X.columns)}")
     
-    # Train/Test split
-    print("\n[3/4] Splitting data (80% train, 20% test)...")
-    X_train, X_test, yp_train, yp_test, yd_train, yd_test = train_test_split(
-        X, y_price, y_direction, test_size=0.2, random_state=42
-    )
+    # --- TIME SERIES SPLIT ---
+    # We train on the PAST (first 80%) and test on the FUTURE (last 20%)
+    split_idx = int(len(X) * 0.8)
+    
+    print("\n[3/4] Splitting data (Time-Series Split)...")
+    split_date = dates.iloc[split_idx]
+    print(f"  Training Range: {dates.iloc[0].date()} -> {dates.iloc[split_idx-1].date()}")
+    print(f"  Testing Range:  {split_date.date()} -> {dates.iloc[-1].date()}")
+    
+    X_train, X_test = X.iloc[:split_idx], X.iloc[split_idx:]
+    yp_train, yp_test = y_price.iloc[:split_idx], y_price.iloc[split_idx:]
+    yd_train, yd_test = y_direction.iloc[:split_idx], y_direction.iloc[split_idx:]
     
     # --- 1. PRICE REGRESSOR ---
     print("\n[4/4] Training Models...")
