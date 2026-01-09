@@ -57,13 +57,12 @@ def main():
             print(f"\nGrader: {grader.get('grader')}")
             # Show keys for grader object
             print(f"  Keys: {list(grader.keys())}")
-            # Show grades keys if they exist
             if 'grades' in grader:
                 print(f"  Grades keys: {list(grader['grades'].keys())}")
-                
-            # Check for any interesting fields like 'prices', 'value', 'sales'
-            # (Just printing everything for the grader to check)
-            # print(json.dumps(grader, indent=2)) 
+            
+            # Print the first grader's full data to see the structure of grades/metrics
+            if grader.get('grader') == 'psa':
+                print(json.dumps(grader, indent=2)) 
 
     # Check for anything appearing to be price related
     print("\n--- Searching for 'price', 'sale', 'val' in entire response ---")
